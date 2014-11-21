@@ -1,4 +1,4 @@
 perm
 ====
 
-The algorithm is same as https://code.google.com/p/perm/
+The algorithm is the same as https://code.google.com/p/perm/
