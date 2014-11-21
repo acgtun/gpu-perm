@@ -5,19 +5,19 @@
 #include "sdk.h"
 
 typedef struct {
-	//input and out parameter
+  //input and out parameter
 
-	string readsFile;
-	uint32_t readLen;
-	string refFile;
+  string readsFile;
+  uint32_t readLen;
+  string refFile;
 
-	uint32_t nNumOfreads;
+  uint32_t nNumOfreads;
 
-	string outputFile;
-	string indexFile;
+  string outputFile;
+  string indexFile;
 
-	int bSaveIndex; // Default is false
-	int bIndexExist;
+  int bSaveIndex;  // Default is false
+  int bIndexExist;
 
 } Option;
 

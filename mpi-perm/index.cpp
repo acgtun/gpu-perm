@@ -4,18 +4,18 @@
 #include "hash.h"
 
 int main(int argc, char* argv[]) {
-	Option opt;
-	GetParameter(argc, argv, opt);
-	
-	CReference refGenome;
-	CHashTable hashTable;
+  Option opt;
+  GetParameter(argc, argv, opt);
 
-	TIME_INFO(BuildIndex(opt, &refGenome, &hashTable), "Build index");
+  CReference refGenome;
+  CHashTable hashTable;
 
-	/* release memory*/
-	free(refGenome.refSeq);
-	free(hashTable.counter);
-	free(hashTable.index);
+  TIME_INFO(BuildIndex(opt, &refGenome, &hashTable), "Build index");
 
-	return 0;
+  /* release memory*/
+  free(refGenome.refSeq);
+  free(hashTable.counter);
+  free(hashTable.index);
+
+  return 0;
 }

@@ -1,14 +1,17 @@
 #include "alloc_kernel.h"
 
-void Match_Kernel(const CReference * refGenome, const CHashTable * hashTable, const CRead * reads, const CRead * reads_rev, CRegion * d_reads_region,
-		const SIZE_T & NUM) {
-	for (SIZE_T i = 0; i < NUM; i++) {
-		if (i % TOTAL_SHIFT_rev < TOTAL_SHIFT) {
-			Match(refGenome, hashTable, &reads[i / TOTAL_SHIFT_rev], i % TOTAL_SHIFT, &(d_reads_region[i]));
-		} else {
-			Match(refGenome, hashTable, &reads_rev[i / TOTAL_SHIFT_rev], i % TOTAL_SHIFT, &(d_reads_region[i]));
-		}
-	}
+void Match_Kernel(const CReference * refGenome, const CHashTable * hashTable,
+                  const CRead * reads, const CRead * reads_rev,
+                  CRegion * d_reads_region, const SIZE_T & NUM) {
+  for (SIZE_T i = 0; i < NUM; i++) {
+    if (i % TOTAL_SHIFT_rev < TOTAL_SHIFT) {
+      Match(refGenome, hashTable, &reads[i / TOTAL_SHIFT_rev], i % TOTAL_SHIFT,
+            &(d_reads_region[i]));
+    } else {
+      Match(refGenome, hashTable, &reads_rev[i / TOTAL_SHIFT_rev],
+            i % TOTAL_SHIFT, &(d_reads_region[i]));
+    }
+  }
 }
 
 //
@@ -70,69 +73,80 @@ void Match_Kernel(const CReference * refGenome, const CHashTable * hashTable, co
 //	return i.second > j.second;
 //}
 
-void ReadReads(const Option & opt, const CReference * refGenome, const CHashTable * hashTable) {
-	FILE * fout = fopen(opt.outputFile.c_str(), "wb");
-	CRead * reads, *reads_rev;
-	CRegion * region;
-	char * strReads;
+void ReadReads(const Option & opt, const CReference * refGenome,
+               const CHashTable * hashTable) {
+  FILE * fout = fopen(opt.outputFile.c_str(), "wb");
+  CRead * reads, *reads_rev;
+  CRegion * region;
+  char * strReads;
 
-	MEMORY_ALLOCATE_CHECK( reads = (CRead *) malloc( MAX_MAPPING_READS * sizeof(CRead)));
-	MEMORY_ALLOCATE_CHECK( reads_rev = (CRead *) malloc( MAX_MAPPING_READS * sizeof(CRead)));
-	MEMORY_ALLOCATE_CHECK( region = (CRegion *) malloc(MAX_MAPPING_READS * TOTAL_SHIFT_rev * sizeof(CRegion)));
+  MEMORY_ALLOCATE_CHECK(
+      reads = (CRead *) malloc(MAX_MAPPING_READS * sizeof(CRead)));
+  MEMORY_ALLOCATE_CHECK(
+      reads_rev = (CRead *) malloc(MAX_MAPPING_READS * sizeof(CRead)));
+  MEMORY_ALLOCATE_CHECK(
+      region = (CRegion *) malloc(
+          MAX_MAPPING_READS * TOTAL_SHIFT_rev * sizeof(CRegion)));
 
-	/* read reads from the file*/
-	INFO("read reads from", opt.readsFile);
-	SIZE_T readsLen = ReadWholeFile(opt.readsFile, &strReads);
+  /* read reads from the file*/
+  INFO("read reads from", opt.readsFile);
+  SIZE_T readsLen = ReadWholeFile(opt.readsFile, &strReads);
 
-	char strRead[MAX_LINE_LEN];
-	SIZE_T nReadsNum = 0;
-	SIZE_T readID = 0;
-	map<SIZE_T, SIZE_T> mapPosCount;
+  char strRead[MAX_LINE_LEN];
+  SIZE_T nReadsNum = 0;
+  SIZE_T readID = 0;
+  map < SIZE_T, SIZE_T > mapPosCount;
 
-	for (SIZE_T i = 0; i < readsLen; i++) {
-		SIZE_T len = GetLineFromString(&strReads[i], strRead);
-		i += len;
-		if (strRead[0] != '>' && len != 0) {
-			CHECK_READ_LEN(len, nReadsNum);
-			strcpy(reads[nReadsNum].readInStr, strRead);
-			reads[nReadsNum].readLen = len;
-			nReadsNum++;
-		}
+  for (SIZE_T i = 0; i < readsLen; i++) {
+    SIZE_T len = GetLineFromString(&strReads[i], strRead);
+    i += len;
+    if (strRead[0] != '>' && len != 0) {
+      CHECK_READ_LEN(len, nReadsNum);
+      strcpy(reads[nReadsNum].readInStr, strRead);
+      reads[nReadsNum].readLen = len;
+      nReadsNum++;
+    }
 
-		if (nReadsNum == MAX_MAPPING_READS || (nReadsNum > 0 && i >= readsLen - 1)) {
-			Reverse_Kernel(reads, reads_rev, nReadsNum);
-			SIZE_T NUM = TOTAL_SHIFT_rev * nReadsNum;
-			TIME_INFO(Match_Kernel(refGenome, hashTable, reads, reads_rev, region, NUM), "match time");
+    if (nReadsNum == MAX_MAPPING_READS
+        || (nReadsNum > 0 && i >= readsLen - 1)) {
+      Reverse_Kernel(reads, reads_rev, nReadsNum);
+      SIZE_T NUM = TOTAL_SHIFT_rev * nReadsNum;
+      TIME_INFO(
+          Match_Kernel(refGenome, hashTable, reads, reads_rev, region, NUM),
+          "match time");
 
-			for (SIZE_T i = 0; i < NUM; i++) {
-				for (SIZE_T j = region[i].lower; j <= region[i].upper; j++) {
-					mapPosCount[hashTable->index[j] - i % TOTAL_SHIFT]++;
-				}
-				if ((i + 1) % TOTAL_SHIFT == 0) {
-					for (map<SIZE_T, SIZE_T>::iterator it = mapPosCount.begin(); it != mapPosCount.end(); it++) {
-						if (it->second > 1) {
-							fprintf(fout, "read %d: %d %d\n", i / TOTAL_SHIFT_rev, it->first, it->second);
-						}
-					}
-					mapPosCount.clear();
-				}
-			}
-			readID += nReadsNum;
-			nReadsNum = 0;
-		}
-	}
+      for (SIZE_T i = 0; i < NUM; i++) {
+        for (SIZE_T j = region[i].lower; j <= region[i].upper; j++) {
+          mapPosCount[hashTable->index[j] - i % TOTAL_SHIFT]++;
+        }
+        if ((i + 1) % TOTAL_SHIFT == 0) {
+          for (map<SIZE_T, SIZE_T>::iterator it = mapPosCount.begin();
+              it != mapPosCount.end(); it++) {
+            if (it->second > 1) {
+              fprintf(fout, "read %d: %d %d\n", i / TOTAL_SHIFT_rev, it->first,
+                      it->second);
+            }
+          }
+          mapPosCount.clear();
+        }
+      }
+      readID += nReadsNum;
+      nReadsNum = 0;
+    }
+  }
 
-	fclose(fout);
-	free(strReads);
-	free(reads);
-	free(region);
+  fclose(fout);
+  free(strReads);
+  free(reads);
+  free(region);
 }
 
-void Matching(const Option & opt, const CReference * refGenome, const CHashTable * hashTable) {
+void Matching(const Option & opt, const CReference * refGenome,
+              const CHashTable * hashTable) {
 
-	ReadReads(opt, refGenome, hashTable);
-	/* free memory*/
-	free(refGenome->refInBits);
-	free(hashTable->counter);
-	free(hashTable->index);
+  ReadReads(opt, refGenome, hashTable);
+  /* free memory*/
+  free(refGenome->refInBits);
+  free(hashTable->counter);
+  free(hashTable->index);
 }

@@ -30,17 +30,17 @@ const double GB = 1024 * 1024 * 1024;
 #define MAX_LINE_LEN 10024
 
 inline void MemoryAllocateCheck(void * pointer, const char * file, int line) {
-	if (pointer == NULL) {
-		printf("Memory allocate error in %s at line %d\n", file, line);
-		exit (EXIT_FAILURE);
-	}
+  if (pointer == NULL) {
+    printf("Memory allocate error in %s at line %d\n", file, line);
+    exit(EXIT_FAILURE);
+  }
 }
 
 inline void FileOpenCheck(FILE * pfile, const char * file, int line) {
-	if (pfile == NULL) {
-		printf("File open error in %s at line %d\n", file, line);
-		exit (EXIT_FAILURE);
-	}
+  if (pfile == NULL) {
+    printf("File open error in %s at line %d\n", file, line);
+    exit(EXIT_FAILURE);
+  }
 }
 
 #define HANDLE_ERROR(err) (HandleError( err, __FILE__, __LINE__ ))
@@ -69,74 +69,75 @@ inline void FileOpenCheck(FILE * pfile, const char * file, int line) {
 }
 
 inline int isACGT(const char & nt) {
-	switch (nt) {
-		case 'a':
-		case 'c':
-		case 'g':
-		case 't':
-		case 'A':
-		case 'C':
-		case 'G':
-		case 'T':
-			return 1;
-		default:
-			return 0;
-	}
+  switch (nt) {
+    case 'a':
+    case 'c':
+    case 'g':
+    case 't':
+    case 'A':
+    case 'C':
+    case 'G':
+    case 'T':
+      return 1;
+    default:
+      return 0;
+  }
 }
 
 inline void INFO(const string & msg) {
-	cout << "--INFO-- " << msg << "." << endl;
+  cout << "--INFO-- " << msg << "." << endl;
 }
 /*
-inline void INFO(const int & rank) {
-	cout << "[rank " << rank << "]";
-	printf("--- %s:%s:%d\n",  __FILE__, __func__, __LINE__);
-}
-*/
+ inline void INFO(const int & rank) {
+ cout << "[rank " << rank << "]";
+ printf("--- %s:%s:%d\n",  __FILE__, __func__, __LINE__);
+ }
+ */
 inline void INFO(const string & msg, const string & val) {
-	cout << "--INFO-- " << msg << " " << val << "." << endl;
+  cout << "--INFO-- " << msg << " " << val << "." << endl;
 }
 inline void INFO(const string & msg, const uint32_t &val) {
-	cout << "--INFO-- " << msg << " " << val << "." << endl;
+  cout << "--INFO-- " << msg << " " << val << "." << endl;
 }
-inline void INFO(const string & msg, const uint32_t & val1, const string & val2) {
-	cout << "--INFO-- " << msg << " " << val1 << " " << val2 << "." << endl;
+inline void INFO(const string & msg, const uint32_t & val1,
+                 const string & val2) {
+  cout << "--INFO-- " << msg << " " << val1 << " " << val2 << "." << endl;
 }
 
 inline uint32_t GetHashValue(const char * strSeed) {
-	uint32_t hashValue = 0;
-	for (uint32_t i = 0; i < HASHLEN; i++) {
-		hashValue <<= 2;
-		switch (strSeed[i]) {
-			case 'A':
-				hashValue += 0;
-				break;
-			case 'C':
-				hashValue += 1;
-				break;
-			case 'G':
-				hashValue += 2;
-				break;
-			case 'T':
-				hashValue += 3;
-				break;
-		}
-	}
-	return hashValue;
+  uint32_t hashValue = 0;
+  for (uint32_t i = 0; i < HASHLEN; i++) {
+    hashValue <<= 2;
+    switch (strSeed[i]) {
+      case 'A':
+        hashValue += 0;
+        break;
+      case 'C':
+        hashValue += 1;
+        break;
+      case 'G':
+        hashValue += 2;
+        break;
+      case 'T':
+        hashValue += 3;
+        break;
+    }
+  }
+  return hashValue;
 }
 
 inline char getNT(const int & nt) {
-	switch (nt) {
-		case 0:
-			return 'A';
-		case 1:
-			return 'C';
-		case 2:
-			return 'G';
-		case 3:
-			return 'T';
-	}
-	return 'A';
+  switch (nt) {
+    case 0:
+      return 'A';
+    case 1:
+      return 'C';
+    case 2:
+      return 'G';
+    case 3:
+      return 'T';
+  }
+  return 'A';
 }
 
 #endif /* STDAFX_H_ */

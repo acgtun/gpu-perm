@@ -24,27 +24,28 @@
 #include "alloc_kernel.h"
 
 int main(int argc, const char* argv[]) {
-	/* (1) Get parameters */
-	Option opt;
-	GetParameter(argc, argv, opt);
+  /* (1) Get parameters */
+  Option opt;
+  GetParameter(argc, argv, opt);
 
-	CReference refGenome;
-	CHashTable hashTable;
+  CReference refGenome;
+  CHashTable hashTable;
 
-	cout << "opt.bIndexExist = " << opt.bIndexExist << endl;
-	if (opt.bIndexExist) {
-		/* (2) Read Reference and Hash Table from index */
-		TIME_INFO(ReadIndexAndRef(&refGenome, &hashTable, opt), "read reference and hash table");
-	} else {
-		/* (3) Read Reference */
-		TIME_INFO(GetReference(&refGenome, opt), "encode reference");
-		cout << "hf2" << endl;
-		/* (4) Build Reference Index */
-		TIME_INFO(MakeHashTable(&refGenome, &hashTable, opt), "build hash table");
-	}
+  cout << "opt.bIndexExist = " << opt.bIndexExist << endl;
+  if (opt.bIndexExist) {
+    /* (2) Read Reference and Hash Table from index */
+    TIME_INFO(ReadIndexAndRef(&refGenome, &hashTable, opt),
+              "read reference and hash table");
+  } else {
+    /* (3) Read Reference */
+    TIME_INFO(GetReference(&refGenome, opt), "encode reference");
+    cout << "hf2" << endl;
+    /* (4) Build Reference Index */
+    TIME_INFO(MakeHashTable(&refGenome, &hashTable, opt), "build hash table");
+  }
 
-	/* (5) Build Reference Index */
-	TIME_INFO(Matching(opt, &refGenome, &hashTable), "mapping");
+  /* (5) Build Reference Index */
+  TIME_INFO(Matching(opt, &refGenome, &hashTable), "mapping");
 
-	return 0;
+  return 0;
 }

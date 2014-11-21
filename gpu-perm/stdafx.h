@@ -26,12 +26,12 @@ using namespace std;
 #define THREADS 512
 
 static void HandleError(cudaError_t err, const char *file, int line) {
-	if (err != cudaSuccess) {
-		printf("%s in %s at line %d\n", cudaGetErrorString(err), file, line);
-		//exit(EXIT_FAILURE);
-	} else {
-		printf("%s in %s at line %d\n", cudaGetErrorString(err), file, line);
-	}
+  if (err != cudaSuccess) {
+    printf("%s in %s at line %d\n", cudaGetErrorString(err), file, line);
+    //exit(EXIT_FAILURE);
+  } else {
+    printf("%s in %s at line %d\n", cudaGetErrorString(err), file, line);
+  }
 }
 #endif
 
@@ -50,7 +50,7 @@ typedef unsigned long long WORD_SIZE; /* no matter 32-bit or 64-bit, make sure t
 
 //1110100
 const char F2SEEDPATTERN[] =
-		"1110100111010011101001110100111010011101001110100111010011101001110100\
+    "1110100111010011101001110100111010011101001110100111010011101001110100\
 1110100111010011101001110100111010011101001110100111010011101001110100\
 1110100111010011101001110100111010011101001110100111010011101001110100\
 1110100111010011101001110100111010011101001110100111010011101001110100\
@@ -76,37 +76,39 @@ const char F2SEEDPATTERN[] =
 #define TYPE_NOTHING 2
 
 inline void MemoryAllocateCheck(void * pointer, const char * file, int line) {
-	if (pointer == NULL) {
-		printf("Memory allocate error in %s at line %d\n", file, line);
-		exit(EXIT_FAILURE);
-	}
+  if (pointer == NULL) {
+    printf("Memory allocate error in %s at line %d\n", file, line);
+    exit(EXIT_FAILURE);
+  }
 }
 
 inline void FileOpenCheck(FILE * pfile, const char * file, int line) {
-	if (pfile == NULL) {
-		printf("File open error in %s at line %d\n", file, line);
-		exit(EXIT_FAILURE);
-	}
+  if (pfile == NULL) {
+    printf("File open error in %s at line %d\n", file, line);
+    exit(EXIT_FAILURE);
+  }
 }
 
 inline void printWORD_SIZE(WORD_SIZE word, SIZE_T len) {
-	/* print the WORD_SIZE as binary format */
-	for (SIZE_T i = 0; i < len; i++) {
-		if ((word & 0x01) == 1) {
-			printf("1");
-		} else {
-			printf("0");
-		}
-		word >>= 1;
-	}
-	printf("\n");
+  /* print the WORD_SIZE as binary format */
+  for (SIZE_T i = 0; i < len; i++) {
+    if ((word & 0x01) == 1) {
+      printf("1");
+    } else {
+      printf("0");
+    }
+    word >>= 1;
+  }
+  printf("\n");
 }
 
-inline void checkReadLen(const SIZE_T & len, const SIZE_T & nReadsNum, const char * file, int line) {
-	if (len > MAX_READ_LEN || len < MIN_READ_LEN) {
-		cout << "The length of read " << nReadsNum + 1 << " is not between " << MIN_READ_LEN << " and " << MAX_READ_LEN << ". It will be ignored."
-				<< "--- in " << file << " at line " << line << endl;
-	}
+inline void checkReadLen(const SIZE_T & len, const SIZE_T & nReadsNum,
+                         const char * file, int line) {
+  if (len > MAX_READ_LEN || len < MIN_READ_LEN) {
+    cout << "The length of read " << nReadsNum + 1 << " is not between "
+        << MIN_READ_LEN << " and " << MAX_READ_LEN << ". It will be ignored."
+        << "--- in " << file << " at line " << line << endl;
+  }
 }
 
 #define INFO(msg, file) cout << msg << " " << file << endl
@@ -134,25 +136,25 @@ inline void checkReadLen(const SIZE_T & len, const SIZE_T & nReadsNum, const cha
 }
 
 typedef struct {
-	SIZE_T nMismatch; //it's very dangerous.
-	SIZE_T nStartPos;
-	char org_rev;
+  SIZE_T nMismatch;  //it's very dangerous.
+  SIZE_T nStartPos;
+  char org_rev;
 } CResult;
 
 inline int isACGT(const char & nt) {
-	switch (nt) {
-	case 'a':
-	case 'c':
-	case 'g':
-	case 't':
-	case 'A':
-	case 'C':
-	case 'G':
-	case 'T':
-		return 1;
-	default:
-		return 0;
-	}
+  switch (nt) {
+    case 'a':
+    case 'c':
+    case 'g':
+    case 't':
+    case 'A':
+    case 'C':
+    case 'G':
+    case 'T':
+      return 1;
+    default:
+      return 0;
+  }
 }
 
 #endif /* STDAFX_H_ */

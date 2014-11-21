@@ -9,13 +9,13 @@
 #include "seed.h"
 
 typedef struct {
-	char readInStr[MAX_READ_LEN];
-	SIZE_T readLen;
+  char readInStr[MAX_READ_LEN];
+  SIZE_T readLen;
 } CRead;
 
 typedef struct {
-	SIZE_T lower;
-	SIZE_T upper;
+  SIZE_T lower;
+  SIZE_T upper;
 } CRegion;
 
 //typedef struct {
@@ -24,7 +24,10 @@ typedef struct {
 //	char org_rev;
 //} CMatch;
 
-void Reverse_Kernel(const CRead * reads, CRead * reads_rev, const SIZE_T & nReadsNum);
-__device__ void Match(const CReference * refGenome, const CHashTable * hashTable, const CRead * oneRead, const SIZE_T & nStartPos, CRegion * oneResult);
+void Reverse_Kernel(const CRead * reads, CRead * reads_rev,
+                    const SIZE_T & nReadsNum);
+__device__ void Match(const CReference * refGenome,
+                      const CHashTable * hashTable, const CRead * oneRead,
+                      const SIZE_T & nStartPos, CRegion * oneResult);
 
 #endif /* MATCHING_H_ */

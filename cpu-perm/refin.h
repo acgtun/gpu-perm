@@ -8,9 +8,9 @@
 #include "bitscode.h"
 
 typedef struct {
-	InBits * refInBits;
-	SIZE_T nRefSize;
-	SIZE_T nRefSizeInWordSize;
+  InBits * refInBits;
+  SIZE_T nRefSize;
+  SIZE_T nRefSizeInWordSize;
 } CReference;
 
 void GetReference(CReference * refGenome, Option & opt);

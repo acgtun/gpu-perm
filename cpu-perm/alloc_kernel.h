@@ -9,7 +9,8 @@
 #include "iofile.h"
 #include "match.h"
 
-void Matching(const Option & opt, const CReference * refGenome, const CHashTable * hashTable);
+void Matching(const Option & opt, const CReference * refGenome,
+              const CHashTable * hashTable);
 
 #endif /* ALLOCATE_H_ */
 

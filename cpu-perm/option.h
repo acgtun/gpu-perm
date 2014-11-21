@@ -9,24 +9,24 @@
 using namespace std;
 
 typedef struct {
-	/* mapping parameter */
-	SIZE_T nMaxMismatch;
+  /* mapping parameter */
+  SIZE_T nMaxMismatch;
 } MapOpt;
 
 typedef struct {
-	//input and out parameter
-	string readsFile;
-	string refFile;
+  //input and out parameter
+  string readsFile;
+  string refFile;
 
-	string outputFile;
-	string indexFile;
-	int bSaveIndex; // Default is false
-	int bIndexExist;
+  string outputFile;
+  string indexFile;
+  int bSaveIndex;  // Default is false
+  int bIndexExist;
 
-	MapOpt mapOpt;
+  MapOpt mapOpt;
 
-	/////////////////////////////////
-	set<SIZE_T> setConsectiveN;
+  /////////////////////////////////
+  set<SIZE_T> setConsectiveN;
 } Option;
 
 void PrintSynopsis();
